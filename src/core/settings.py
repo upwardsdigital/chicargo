@@ -26,9 +26,10 @@ INSTALLED_APPS = [
     'django.contrib.staticfiles',
 
     'drf_yasg',
-
     'rest_framework',
     'rest_framework_simplejwt',
+
+    'accounts',
 ]
 
 MIDDLEWARE = [
@@ -116,6 +117,9 @@ MEDIA_ROOT = BASE_DIR / 'media'
 # Default primary key field type
 
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
+
+# User Model
+AUTH_USER_MODEL = 'accounts.User'
 
 
 REST_FRAMEWORK = {
