@@ -12,5 +12,7 @@ class Country(models.Model):
 
 class User(AbstractUser):
     country = models.ForeignKey(
-        Country, on_delete=models.DO_NOTHING, related_name="users"
+        Country, on_delete=models.DO_NOTHING,
+        related_name="users",
+        blank=True, null=True
     )
