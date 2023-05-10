@@ -3,7 +3,7 @@ from django.contrib.auth.models import Group
 from rest_framework import serializers
 from rest_framework_simplejwt.serializers import TokenObtainPairSerializer
 
-from .models import Country
+from .models import Country, Report
 from .services import EmailService
 
 User = get_user_model()
@@ -93,5 +93,20 @@ class CreateStaffUserSerializer(serializers.ModelSerializer):
                           f"Password: {password} \n",
             "to_email": user.email,
         }
-        EmailService.send_email(data)
+        # EmailService.send_email(data)
         return user
+
+
+class ReportSerializer(serializers.ModelSerializer):
+
+    class Meta:
+        model = Report
+        fields = '__all__'
+
+
+class ReportRetrieveSerializer(serializers.ModelSerializer):
+    users = StaffUserSerializer(many=True)
+
+    class Meta:
+        model = Report
+        fields = '__all__'
