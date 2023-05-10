@@ -2,6 +2,7 @@ from django.contrib.auth.models import AbstractUser
 from django.db import models
 from datetime import date
 
+
 class Country(models.Model):
     name = models.CharField(unique=True)
     code = models.CharField(max_length=255)

@@ -4,13 +4,13 @@ from rest_framework import generics, permissions
 from rest_framework_simplejwt.views import TokenObtainPairView
 
 from .models import Country, Report
+from .pagination import CustomPageNumberPagination
 from .serializers import CustomTokenObtainPairSerializer
 from .serializers import (
     GroupSerializer, CountrySerializer,
     StaffUserSerializer, CreateStaffUserSerializer,
     ReportSerializer, ReportRetrieveSerializer
 )
-from .pagination import CustomPageNumberPagination
 
 User = get_user_model()
 

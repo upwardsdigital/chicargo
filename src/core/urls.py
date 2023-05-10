@@ -8,6 +8,7 @@ from .yasg import urlpatterns as doc_urls
 urlpatterns = [
     path('admin/', admin.site.urls),
     path('api/', include('accounts.urls')),
+    path('api/', include('expenses.urls')),
 ]
 urlpatterns += doc_urls
 urlpatterns += static(settings.STATIC_URL, document_root=settings.STATIC_ROOT)
