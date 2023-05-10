@@ -1,5 +1,5 @@
 from .models import Expense, Type
-from rest_framework import viewsets, generics
+from rest_framework import viewsets, generics, permissions
 from .serializers import TypeSerializer, ExpenseCreateUpdateSerializer, ExpenseSerializer
 from accounts.pagination import CustomPageNumberPagination
 
@@ -10,6 +10,7 @@ class TypeListCreateAPIView(generics.ListCreateAPIView):
 
 
 class ExpenseModelViewSet(viewsets.ModelViewSet):
+    permission_classes = (permissions.IsAuthenticated, permissions.IsAdminUser,)
     pagination_class = CustomPageNumberPagination
     queryset = Expense.objects.all()
     filterset_fields = ('date',)
