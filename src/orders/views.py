@@ -21,7 +21,7 @@ class ProductTypeListCreateAPIView(generics.ListCreateAPIView):
 
 class ProductModelViewSet(viewsets.ModelViewSet):
     permission_classes = (permissions.IsAuthenticated, permissions.IsAdminUser,)
-    queryset = Product.objects.all()
+    queryset = Product.objects.all().order_by('-id')
     pagination_class = CustomPageNumberPagination
     filter_backends = (dj_filters.DjangoFilterBackend, filters.SearchFilter,)
     filterset_class = ProductFilter
@@ -37,3 +37,13 @@ class ProductModelViewSet(viewsets.ModelViewSet):
             return ProductSerializer
         else:
             return ProductCreateSerializer
+
+
+class ProductHistoryListAPIView(generics.ListAPIView):
+    permission_classes = (permissions.IsAuthenticated, permissions.IsAdminUser,)
+    queryset = Product.objects.all().order_by('-id')
+    pagination_class = CustomPageNumberPagination
+    filter_backends = (dj_filters.DjangoFilterBackend, filters.SearchFilter,)
+    filterset_class = ProductFilter
+    serializer_class = ProductSerializer
+    search_fields = ('receiver_full_name',)

@@ -3,7 +3,7 @@ from rest_framework import routers
 
 from .views import (
     StatusListCreateAPIView, ProductTypeListCreateAPIView,
-    ProductModelViewSet
+    ProductModelViewSet, ProductHistoryListAPIView
 )
 
 router = routers.DefaultRouter()
@@ -11,6 +11,7 @@ router.register(r'products', ProductModelViewSet, basename="products")
 
 urlpatterns = [
     path('statuses/', StatusListCreateAPIView.as_view(), name="statuses"),
-    path('products/types/', ProductTypeListCreateAPIView.as_view(), name="product_types"),
+    path('products/types/', ProductTypeListCreateAPIView.as_view(), name="products_types"),
+    path('products/history/', ProductHistoryListAPIView.as_view(), name="products_history"),
     path('', include(router.urls))
 ]
