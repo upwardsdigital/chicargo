@@ -12,6 +12,9 @@ class Country(models.Model):
 
 
 class User(AbstractUser):
+    first_name = None
+    last_name = None
+    full_name = models.CharField(max_length=255, blank=True, null=True)
     country = models.ForeignKey(
         Country, on_delete=models.DO_NOTHING,
         related_name="users",

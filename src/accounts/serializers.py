@@ -44,8 +44,7 @@ class StaffUserSerializer(serializers.ModelSerializer):
     class Meta:
         model = User
         fields = (
-            "id", "first_name",
-            "last_name",
+            "id", "full_name",
             "username", "email",
             "groups", "country"
         )
@@ -71,7 +70,7 @@ class CreateStaffUserSerializer(serializers.ModelSerializer):
     class Meta:
         model = User
         fields = (
-            "id", "first_name", "last_name",
+            "id", "full_name",
             "username", "email", "password",
             "confirm_password", "country", "group",
         )
