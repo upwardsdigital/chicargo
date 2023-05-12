@@ -1,8 +1,9 @@
 from rest_framework import generics, viewsets, filters, permissions
-from .models import Product, ProductType, Status
+from .models import Product, ProductType, Status, PackageType
 from .serializers import (
     StatusSerializer, ProductTypeSerializer,
-    ProductSerializer, ProductCreateSerializer
+    ProductSerializer, ProductCreateSerializer,
+    PackageTypeSerializer
 )
 from accounts.pagination import CustomPageNumberPagination
 from .filters import ProductFilter
@@ -19,6 +20,11 @@ class ProductTypeListCreateAPIView(generics.ListCreateAPIView):
     queryset = ProductType.objects.all()
 
 
+class PackageTypeListCreateAPIView(generics.ListCreateAPIView):
+    serializer_class = PackageTypeSerializer
+    queryset = PackageType.objects.all()
+
+
 class ProductModelViewSet(viewsets.ModelViewSet):
     permission_classes = (permissions.IsAuthenticated, permissions.IsAdminUser,)
     queryset = Product.objects.all().order_by('-id')
@@ -28,8 +34,13 @@ class ProductModelViewSet(viewsets.ModelViewSet):
     search_fields = ('receiver_full_name',)
 
     def perform_create(self, serializer):
+        status, _ = Status.objects.get_or_create(
+            slug="loading",
+            defaults={'name': 'Погрузка'}
+        )
         serializer.save(
-            author=self.request.user
+            author=self.request.user,
+            status=status
         )
 
     def get_serializer_class(self):
