@@ -11,6 +11,7 @@ from .serializers import (
     StaffUserSerializer, CreateStaffUserSerializer,
     ReportSerializer, ReportRetrieveSerializer, UpdateStaffUserSerializer
 )
+from .filters import ReportFilter
 
 User = get_user_model()
 
@@ -55,9 +56,7 @@ class StaffUserDeleteAPIView(generics.DestroyAPIView):
 class ReportListCreateAPIView(generics.ListCreateAPIView):
     permission_classes = (permissions.IsAuthenticated,)
     pagination_class = CustomPageNumberPagination
-    filterset_fields = (
-        'name', 'author__country'
-    )
+    filterset_class = ReportFilter
 
     def get_serializer_class(self):
         if self.request.method == 'GET':
