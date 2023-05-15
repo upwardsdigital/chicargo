@@ -20,7 +20,7 @@ class CustomTokenObtainPairView(TokenObtainPairView):
 
 
 class GroupListAPIView(generics.ListAPIView):
-    queryset = Group.objects.all()
+    queryset = Group.objects.exclude(id=1)
     serializer_class = GroupSerializer
 
 
