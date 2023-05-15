@@ -4,6 +4,7 @@ from rest_framework import serializers
 from django.utils.translation import gettext as _
 from rest_framework_simplejwt.serializers import TokenObtainPairSerializer
 from django.db import IntegrityError
+from rest_framework.utils import model_meta
 
 
 from .models import Country, Report
@@ -174,6 +175,21 @@ class ReportSerializer(serializers.ModelSerializer):
     class Meta:
         model = Report
         fields = '__all__'
+
+    def create(self, validated_data):
+        info = model_meta.get_field_info(self.Meta.model)
+        many_to_many = {}
+        for field_name, relation_info in info.relations.items():
+            if relation_info.to_many and (field_name in validated_data):
+                many_to_many[field_name] = validated_data.pop(field_name)
+        instance, _ = self.Meta.model.objects.update_or_create(
+            name=validated_data.get("name", None), defaults=validated_data
+        )
+        if many_to_many:
+            for field_name, value in many_to_many.items():
+                field = getattr(instance, field_name)
+                field.set(value)
+        return instance
 
 
 class ReportRetrieveSerializer(serializers.ModelSerializer):
