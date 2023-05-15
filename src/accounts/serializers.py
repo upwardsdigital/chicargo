@@ -182,13 +182,17 @@ class ReportSerializer(serializers.ModelSerializer):
         for field_name, relation_info in info.relations.items():
             if relation_info.to_many and (field_name in validated_data):
                 many_to_many[field_name] = validated_data.pop(field_name)
-        instance, _ = self.Meta.model.objects.update_or_create(
-            name=validated_data.get("name", None), defaults=validated_data
+        instance, created = self.Meta.model.objects.update_or_create(
+            name=validated_data.get("name", None),
+            defaults=validated_data
         )
         if many_to_many:
             for field_name, value in many_to_many.items():
                 field = getattr(instance, field_name)
-                field.set(value)
+                if created:
+                    field.set(value)
+                else:
+                    field.add(*value)
         return instance
 
 
