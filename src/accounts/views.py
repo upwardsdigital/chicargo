@@ -31,7 +31,7 @@ class CountryListAPIView(generics.ListAPIView):
 
 class StaffUserListCreateAPIView(generics.ListCreateAPIView):
     pagination_class = CustomPageNumberPagination
-    queryset = User.objects.filter(is_staff=True)
+    queryset = User.objects.filter(is_staff=True, is_superuser=False)
 
     def get_serializer_class(self):
         if self.request.method == 'GET':
