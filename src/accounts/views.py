@@ -41,8 +41,15 @@ class StaffUserListCreateAPIView(generics.ListCreateAPIView):
 
 
 class StaffUserUpdateAPIView(generics.UpdateAPIView):
+    permission_classes = (permissions.IsAuthenticated, permissions.IsAdminUser,)
     queryset = User.objects.filter(is_staff=True)
     serializer_class = UpdateStaffUserSerializer
+
+
+class StaffUserDeleteAPIView(generics.DestroyAPIView):
+    permission_classes = (permissions.IsAuthenticated, permissions.IsAdminUser,)
+    queryset = User.objects.filter(is_staff=True)
+    serializer_class = StaffUserSerializer
 
 
 class ReportListCreateAPIView(generics.ListCreateAPIView):
