@@ -1,7 +1,10 @@
 from django.contrib.auth import get_user_model
 from django.contrib.auth.models import Group
 from rest_framework import serializers
+from django.utils.translation import gettext as _
 from rest_framework_simplejwt.serializers import TokenObtainPairSerializer
+from django.db import IntegrityError
+
 
 from .models import Country, Report
 from .services import EmailService
@@ -94,6 +97,76 @@ class CreateStaffUserSerializer(serializers.ModelSerializer):
         }
         # EmailService.send_email(data)
         return user
+
+
+class UpdateStaffUserSerializer(serializers.ModelSerializer):
+    password = serializers.CharField(
+        max_length=128,
+        min_length=8,
+        write_only=True,
+        style={'input_type': 'password'},
+        label='password',
+        required=False,
+        allow_blank=True
+    )
+    confirm_password = serializers.CharField(
+        max_length=128,
+        min_length=8,
+        write_only=True,
+        style={'input_type': 'password'},
+        label='confirm password',
+        required=False,
+        allow_blank=True
+    )
+    group = serializers.IntegerField(write_only=True)
+
+    class Meta:
+        model = User
+        fields = (
+            "id", "full_name",
+            "username", "email", "password",
+            "confirm_password", "country", "group",
+        )
+
+    def update(self, instance, validated_data):
+        group_id = validated_data.get('group', 0)
+        instance.full_name = validated_data.get('full_name', instance.full_name)
+        instance.username = validated_data.get('username', instance.username)
+        instance.email = validated_data.get('email', instance.email)
+        instance.country = validated_data.get('country', instance.country)
+        groups = Group.objects.filter(id__in=[group_id])
+        instance.groups.clear()
+        instance.groups.add(*groups)
+        password = validated_data.pop("password", "")
+        confirm_password = validated_data.pop("confirm_password", "")
+        if password != "" and confirm_password != "":
+            if password != confirm_password:
+                raise serializers.ValidationError(
+                    {
+                        "message": {
+                            "password": [
+                                _("Passwords mismatch")
+                            ],
+                            "status": 400
+                        }
+                    }
+                )
+            instance.set_password(password)
+        try:
+            instance.save()
+        except IntegrityError as e:
+            raise serializers.ValidationError(
+                {
+                    "message": {
+                        "username": [
+                            _("User with this username already exists.")
+                        ],
+                        "status": 400
+                    }
+                }
+            )
+        instance.save()
+        return instance
 
 
 class ReportSerializer(serializers.ModelSerializer):

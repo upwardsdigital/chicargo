@@ -5,7 +5,8 @@ from rest_framework_simplejwt.views import (
 from .views import (
     CustomTokenObtainPairView, GroupListAPIView,
     CountryListAPIView, StaffUserListCreateAPIView,
-    ReportListCreateAPIView, ReportRetrieveUpdateAPIView
+    ReportListCreateAPIView, ReportRetrieveUpdateAPIView,
+    StaffUserUpdateAPIView
 )
 
 urlpatterns = [
@@ -14,6 +15,7 @@ urlpatterns = [
     path('roles/', GroupListAPIView.as_view(), name="roles"),
     path('countries/', CountryListAPIView.as_view(), name="countries"),
     path('staff/users/', StaffUserListCreateAPIView.as_view(), name="staff_user"),
+    path('staff/user/update/<int:pk>/', StaffUserUpdateAPIView.as_view(), name="staff_user_update"),
     path('reports/', ReportListCreateAPIView.as_view(), name="report_list"),
-    path('reports/<int:pk>/', ReportRetrieveUpdateAPIView.as_view(), name="report_retrieve")
+    path('reports/<int:pk>/', ReportRetrieveUpdateAPIView.as_view(), name="report_retrieve"),
 ]

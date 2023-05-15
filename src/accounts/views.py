@@ -9,7 +9,7 @@ from .serializers import CustomTokenObtainPairSerializer
 from .serializers import (
     GroupSerializer, CountrySerializer,
     StaffUserSerializer, CreateStaffUserSerializer,
-    ReportSerializer, ReportRetrieveSerializer
+    ReportSerializer, ReportRetrieveSerializer, UpdateStaffUserSerializer
 )
 
 User = get_user_model()
@@ -38,6 +38,11 @@ class StaffUserListCreateAPIView(generics.ListCreateAPIView):
             return StaffUserSerializer
         elif self.request.method == 'POST':
             return CreateStaffUserSerializer
+
+
+class StaffUserUpdateAPIView(generics.UpdateAPIView):
+    queryset = User.objects.filter(is_staff=True)
+    serializer_class = UpdateStaffUserSerializer
 
 
 class ReportListCreateAPIView(generics.ListCreateAPIView):
