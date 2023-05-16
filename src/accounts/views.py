@@ -1,6 +1,6 @@
 from django.contrib.auth import get_user_model
 from django.contrib.auth.models import Group
-from rest_framework import generics, permissions
+from rest_framework import generics, permissions, response, status
 from rest_framework_simplejwt.views import TokenObtainPairView
 
 from .models import Country, Report
@@ -9,7 +9,8 @@ from .serializers import CustomTokenObtainPairSerializer
 from .serializers import (
     GroupSerializer, CountrySerializer,
     StaffUserSerializer, CreateStaffUserSerializer,
-    ReportSerializer, ReportRetrieveSerializer, UpdateStaffUserSerializer
+    ReportSerializer, ReportRetrieveSerializer,
+    UpdateStaffUserSerializer
 )
 from .filters import ReportFilter
 
@@ -90,3 +91,16 @@ class ReportRetrieveUpdateAPIView(generics.RetrieveUpdateAPIView):
             return Report.objects.all()
         else:
             return Report.objects.filter(author=self.request.user)
+
+
+class PersonalInfoAPIView(generics.GenericAPIView):
+    permission_classes = (permissions.IsAuthenticated,)
+    serializer_class = StaffUserSerializer
+
+    def get_queryset(self):
+        return User.objects.get(id=self.request.user.pk)
+
+    def get(self, request):
+        instance = self.get_queryset()
+        serializer = self.get_serializer(instance, many=False)
+        return response.Response(serializer.data, status=status.HTTP_200_OK)

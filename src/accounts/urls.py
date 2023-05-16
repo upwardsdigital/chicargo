@@ -6,7 +6,8 @@ from .views import (
     CustomTokenObtainPairView, GroupListAPIView,
     CountryListAPIView, StaffUserListCreateAPIView,
     ReportListCreateAPIView, ReportRetrieveUpdateAPIView,
-    StaffUserUpdateAPIView, StaffUserDeleteAPIView
+    StaffUserUpdateAPIView, StaffUserDeleteAPIView,
+    PersonalInfoAPIView
 )
 
 urlpatterns = [
@@ -19,4 +20,5 @@ urlpatterns = [
     path('staff/user/delete/<int:pk>/', StaffUserDeleteAPIView.as_view(), name="staff_user_destroy"),
     path('reports/', ReportListCreateAPIView.as_view(), name="report_list"),
     path('reports/<int:pk>/', ReportRetrieveUpdateAPIView.as_view(), name="report_retrieve"),
+    path('personal/info/', PersonalInfoAPIView.as_view(), name="personal_info"),
 ]
