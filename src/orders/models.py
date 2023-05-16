@@ -1,5 +1,6 @@
 from django.db import models
 from django.contrib.auth import get_user_model
+from trucks.models import Truck
 
 
 User = get_user_model()
@@ -32,6 +33,11 @@ class PackageType(models.Model):
 class Product(models.Model):
     author = models.ForeignKey(
         User, on_delete=models.CASCADE,
+        related_name="products",
+        blank=True, null=True
+    )
+    truck = models.ForeignKey(
+        Truck, on_delete=models.CASCADE,
         related_name="products",
         blank=True, null=True
     )
