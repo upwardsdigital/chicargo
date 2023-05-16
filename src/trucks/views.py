@@ -6,7 +6,7 @@ from .filters import TruckFilter
 
 class TruckListCreateAPIView(generics.ListCreateAPIView):
     permission_classes = (permissions.IsAuthenticated,)
-    queryset = Truck.objects.all()
+    queryset = Truck.objects.all().order_by('-id')
     filterset_class = TruckFilter
 
     def get_serializer_class(self):
