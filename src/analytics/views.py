@@ -2,7 +2,7 @@ from rest_framework import views, response, status
 import pandas as pd
 from datetime import datetime, timedelta
 from orders.models import Product
-from expenses.models import Expenses
+from expenses.models import Expense
 from trucks.models import Truck
 
 
@@ -24,7 +24,7 @@ class AnalyticsAPIView(views.APIView):
             ])
             total_expenses = sum([
                 expense.amount for expense in
-                Expenses.objects.all()
+                Expense.objects.all()
             ])
             total_trucks_payment = sum([
                 truck.payment_amount for truck in
@@ -46,7 +46,7 @@ class AnalyticsAPIView(views.APIView):
                 list_of_expenses_money.append(
                     sum(
                         [expense.amount
-                         for expense in Expenses.objects.filter(
+                         for expense in Expense.objects.filter(
                             date__gte=start_date,
                             date__lte=date
                         )]
