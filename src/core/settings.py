@@ -35,6 +35,7 @@ INSTALLED_APPS = [
     'expenses',
     'orders',
     'trucks',
+    'analytics',
 ]
 
 MIDDLEWARE = [
