@@ -21,7 +21,14 @@ class CustomTokenObtainPairSerializer(TokenObtainPairSerializer):
         data.update(
             {
                 "group": user.groups.all().first().name
-                if user.groups.all().exists() else ""
+                if user.groups.all().exists() else "",
+                "full_name": user.full_name,
+                "email": user.email,
+                "username": user.username,
+                "country": {
+                    "id": user.country.id if user.country is not None else 0,
+                    "name": user.country.name if user.country is not None else "",
+                }
             }
         )
         return data
