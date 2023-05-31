@@ -55,8 +55,6 @@ class PaymentRetrieveDestroyAPIView(generics.RetrieveDestroyAPIView):
         return response.Response(status=status.HTTP_204_NO_CONTENT)
 
 
-
-
 class PaymentStatusListCreateAPIView(generics.ListCreateAPIView):
     serializer_class = PaymentStatusSerializer
     queryset = PaymentStatus.objects.all()
