@@ -1,5 +1,5 @@
 from rest_framework import serializers
-from .models import Product, ProductType, Status, PackageType, Payment
+from .models import Product, ProductType, Status, PackageType, Payment, PaymentStatus
 from accounts.serializers import StaffUserSerializer
 
 
@@ -7,6 +7,13 @@ class StatusSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = Status
+        fields = '__all__'
+
+
+class PaymentStatusSerializer(serializers.ModelSerializer):
+
+    class Meta:
+        model = PaymentStatus
         fields = '__all__'
 
 
@@ -36,33 +43,39 @@ class ProductCreateSerializer(serializers.ModelSerializer):
             "sender_full_name", "sender_phone",
             "receiver_full_name", "receiver_phone",
             "city", "type", "package_type", "address",
-            "price", "status", "quantity", "created_at",
+            "price", "status", "payment_status", "quantity", "created_at",
             "amount"
         )
 
     def create(self, validated_data):
         amount = validated_data.pop("amount", 0)
+        status, _ = Status.objects.get_or_create(
+            slug="loading",
+            defaults={'name': 'Погрузка'}
+        )
         if amount != 0:
-            status, _ = Status.objects.get_or_create(
+            payment_status, _ = PaymentStatus.objects.get_or_create(
                 slug="partially",
                 defaults={'name': 'Оплачен частично'}
             )
             product = Product.objects.create(
                 **validated_data,
-                status=status
+                status=status,
+                payment_status=payment_status
             )
             Payment.objects.create(
                 product=product,
                 amount=amount
             )
         else:
-            status, _ = Status.objects.get_or_create(
-                slug="loading",
-                defaults={'name': 'Погрузка'}
+            payment_status, _ = PaymentStatus.objects.get_or_create(
+                slug="not_paid",
+                defaults={'name': 'Не оплачено'}
             )
             product = Product.objects.create(
                 **validated_data,
-                status=status
+                status=status,
+                payment_status=payment_status
             )
         return product
 
@@ -105,8 +118,18 @@ class ProductSerializer(serializers.ModelSerializer):
     type = ProductTypeSerializer(many=False)
     package_type = PackageTypeSerializer(many=False)
     payments = PaymentSerializer(many=True)
+    payment_status = PaymentStatusSerializer(many=False)
 
     class Meta:
         model = Product
-        fields = '__all__'
+        fields = (
+            'id', 'author',
+            'truck', 'sender_full_name',
+            'sender_phone', 'receiver_full_name',
+            'receiver_phone', 'city',
+            'type', 'package_type',
+            'address', 'price', 'status', 'payment_status',
+            'quantity', 'created_at',
+            'total_paid_amount'
+        )
 

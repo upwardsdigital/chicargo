@@ -14,6 +14,14 @@ class Status(models.Model):
         return self.name
 
 
+class PaymentStatus(models.Model):
+    name = models.CharField(max_length=255)
+    slug = models.CharField(max_length=255, unique=True)
+
+    def __str__(self):
+        return self.name
+
+
 class ProductType(models.Model):
     name = models.CharField(max_length=255)
     slug = models.CharField(max_length=255, unique=True)
@@ -64,11 +72,22 @@ class Product(models.Model):
         related_name="products",
         blank=True, null=True
     )
+    payment_status = models.ForeignKey(
+        PaymentStatus,
+        on_delete=models.CASCADE,
+        related_name="products",
+        blank=True, null=True
+    )
     quantity = models.IntegerField(default=0)
     created_at = models.DateTimeField(auto_now_add=True)
 
     def __str__(self):
         return self.sender_full_name
+
+    def total_paid_amount(self):
+        return sum(
+            [payment.amount for payment in self.payments.all()]
+        )
 
 
 class Payment(models.Model):

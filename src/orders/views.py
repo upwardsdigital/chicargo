@@ -2,11 +2,11 @@ from rest_framework import (
     generics, viewsets, filters, permissions,
     views, response, status
 )
-from .models import Product, ProductType, Status, PackageType
+from .models import Product, ProductType, Status, PackageType, PaymentStatus
 from .serializers import (
     StatusSerializer, ProductTypeSerializer,
     ProductSerializer, ProductCreateSerializer,
-    PackageTypeSerializer
+    PackageTypeSerializer, PaymentStatusSerializer
 )
 from accounts.pagination import CustomPageNumberPagination
 from django.shortcuts import get_object_or_404
@@ -23,6 +23,11 @@ class StatusListCreateAPIView(generics.ListCreateAPIView):
 class ProductTypeListCreateAPIView(generics.ListCreateAPIView):
     serializer_class = ProductTypeSerializer
     queryset = ProductType.objects.all()
+
+
+class PaymentStatusListCreateAPIView(generics.ListCreateAPIView):
+    serializer_class = PaymentStatusSerializer
+    queryset = PaymentStatus.objects.all()
 
 
 class PackageTypeListCreateAPIView(generics.ListCreateAPIView):
