@@ -35,13 +35,8 @@ class ProductModelViewSet(viewsets.ModelViewSet):
     search_fields = ('receiver_full_name',)
 
     def perform_create(self, serializer):
-        status, _ = Status.objects.get_or_create(
-            slug="loading",
-            defaults={'name': 'Погрузка'}
-        )
         serializer.save(
-            author=self.request.user,
-            status=status
+            author=self.request.user
         )
 
     def get_serializer_class(self):
