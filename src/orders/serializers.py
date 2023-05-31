@@ -107,11 +107,33 @@ class ProductCreateSerializer(serializers.ModelSerializer):
                 setattr(instance, attr, value)
 
         instance.save()
-        if amount != 0:
+        if amount >= validated_data.get("price", None):
+            payment_status, _ = PaymentStatus.objects.get_or_create(
+                slug="paid",
+                defaults={'name': 'Оплачено'}
+            )
             Payment.objects.create(
                 product=instance,
                 amount=amount
             )
+            instance.payment_status = payment_status
+        elif amount != validated_data.get("price", None) and amount != 0:
+            payment_status, _ = PaymentStatus.objects.get_or_create(
+                slug="partially",
+                defaults={'name': 'Частично'}
+            )
+            Payment.objects.create(
+                product=instance,
+                amount=amount
+            )
+            instance.payment_status = payment_status
+        else:
+            payment_status, _ = PaymentStatus.objects.get_or_create(
+                slug="not_paid",
+                defaults={'name': 'Не оплачено'}
+            )
+            instance.payment_status = payment_status
+        instance.save()
 
         for attr, value in m2m_fields:
             field = getattr(instance, attr)
