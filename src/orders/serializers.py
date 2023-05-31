@@ -128,7 +128,8 @@ class ProductSerializer(serializers.ModelSerializer):
             'sender_phone', 'receiver_full_name',
             'receiver_phone', 'city',
             'type', 'package_type',
-            'address', 'price', 'status', 'payment_status',
+            'address', 'price', 'status',
+            'payments', 'payment_status',
             'quantity', 'created_at',
             'total_paid_amount'
         )
