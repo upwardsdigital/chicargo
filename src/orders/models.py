@@ -96,6 +96,12 @@ class Payment(models.Model):
         on_delete=models.CASCADE,
         related_name="payments"
     )
+    staff = models.ForeignKey(
+        User,
+        related_name="payments",
+        on_delete=models.CASCADE,
+        blank=True, null=True
+    )
     date = models.DateTimeField(auto_now_add=True)
     amount = models.FloatField(default=0.0)
 
