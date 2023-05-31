@@ -57,7 +57,7 @@ class CalculateDebtAmountAPIView(views.APIView):
         if product_id is not None:
             product = get_object_or_404(Product, pk=product_id)
             debt_amount = product.price - sum(
-                [payment.amount for payment in product.payments]
+                [payment.amount for payment in product.payments.all()]
             )
             return response.Response(
                 {
