@@ -6,12 +6,12 @@ from rest_framework import (
 )
 
 from .filters import ProductFilter
-from .models import Product, ProductType, Status, PackageType, PaymentStatus
+from .models import Product, ProductType, Status, PackageType, PaymentStatus, Payment
 from .pagination import OrderPageNumberPagination
 from .serializers import (
     StatusSerializer, ProductTypeSerializer,
     ProductSerializer, ProductCreateSerializer,
-    PackageTypeSerializer, PaymentStatusSerializer
+    PackageTypeSerializer, PaymentStatusSerializer, PaymentSerializer
 )
 
 
@@ -26,8 +26,8 @@ class ProductTypeListCreateAPIView(generics.ListCreateAPIView):
 
 
 class PaymentRetrieveDestroyAPIView(generics.RetrieveDestroyAPIView):
-    serializer_class = PaymentStatusSerializer
-    queryset = PaymentStatus.objects.all()
+    serializer_class = PaymentSerializer
+    queryset = Payment.objects.all()
 
     def destroy(self, request, *args, **kwargs):
         instance = self.get_object()

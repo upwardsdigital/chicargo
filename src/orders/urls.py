@@ -25,6 +25,8 @@ urlpatterns = [
         name="product_payment_amount_calculate"
     ),
     path(
-        'transaction/<int:pk>/', PaymentRetrieveDestroyAPIView.as_view(), name="transaction"
+        'transaction/<int:pk>/',
+        PaymentRetrieveDestroyAPIView.as_view(),
+        name="transaction"
     )
 ]
