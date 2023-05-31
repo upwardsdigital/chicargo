@@ -65,7 +65,8 @@ class ProductCreateSerializer(serializers.ModelSerializer):
             )
             Payment.objects.create(
                 product=product,
-                amount=amount
+                amount=amount,
+                staff=self.context.get("request").user
             )
 
         elif amount != validated_data.get("price", None) and amount != 0:
@@ -80,7 +81,8 @@ class ProductCreateSerializer(serializers.ModelSerializer):
             )
             Payment.objects.create(
                 product=product,
-                amount=amount
+                amount=amount,
+                staff=self.context.get("request").user
             )
         else:
             payment_status, _ = PaymentStatus.objects.get_or_create(
@@ -116,7 +118,8 @@ class ProductCreateSerializer(serializers.ModelSerializer):
             )
             Payment.objects.create(
                 product=instance,
-                amount=amount
+                amount=amount,
+                staff=self.context.get("request").user
             )
             instance.payment_status = payment_status
         elif (
@@ -128,7 +131,8 @@ class ProductCreateSerializer(serializers.ModelSerializer):
             )
             Payment.objects.create(
                 product=instance,
-                amount=amount
+                amount=amount,
+                staff=self.context.get("request").user
             )
             instance.payment_status = payment_status
         else:
@@ -147,6 +151,7 @@ class ProductCreateSerializer(serializers.ModelSerializer):
 
 
 class PaymentSerializer(serializers.ModelSerializer):
+    staff = StaffUserSerializer(many=False)
 
     class Meta:
         model = Payment
