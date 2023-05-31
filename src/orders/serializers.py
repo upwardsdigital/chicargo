@@ -107,7 +107,7 @@ class ProductCreateSerializer(serializers.ModelSerializer):
                 setattr(instance, attr, value)
 
         instance.save()
-        if amount >= instance.price:
+        if amount >= (instance.price + amount):
             payment_status, _ = PaymentStatus.objects.get_or_create(
                 slug="paid",
                 defaults={'name': 'Оплачено'}
