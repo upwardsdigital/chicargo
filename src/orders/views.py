@@ -1,4 +1,7 @@
-from rest_framework import generics, viewsets, filters, permissions
+from rest_framework import (
+    generics, viewsets, filters, permissions,
+    views, response, status
+)
 from .models import Product, ProductType, Status, PackageType
 from .serializers import (
     StatusSerializer, ProductTypeSerializer,
@@ -6,6 +9,7 @@ from .serializers import (
     PackageTypeSerializer
 )
 from accounts.pagination import CustomPageNumberPagination
+from django.shortcuts import get_object_or_404
 from .filters import ProductFilter
 from django_filters import rest_framework as dj_filters
 from .pagination import OrderPageNumberPagination
@@ -44,6 +48,30 @@ class ProductModelViewSet(viewsets.ModelViewSet):
             return ProductSerializer
         else:
             return ProductCreateSerializer
+
+
+class CalculateDebtAmountAPIView(views.APIView):
+
+    def post(self, request):
+        product_id = request.data.get("product_id", None)
+        if product_id is not None:
+            product = get_object_or_404(Product, pk=product_id)
+            debt_amount = product.price - sum(
+                [payment.amount for payment in product.payments]
+            )
+            return response.Response(
+                {
+                    "debt_amount": debt_amount
+                },
+                status=status.HTTP_200_OK
+            )
+        else:
+            return response.Response(
+                {
+                    "message": "product_id is required"
+                },
+                status=status.HTTP_400_BAD_REQUEST
+            )
 
 
 class ProductHistoryListAPIView(generics.ListAPIView):

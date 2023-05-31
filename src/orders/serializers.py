@@ -25,7 +25,9 @@ class PackageTypeSerializer(serializers.ModelSerializer):
 
 
 class ProductCreateSerializer(serializers.ModelSerializer):
-    amount = serializers.FloatField(default=0.0, write_only=True)
+    amount = serializers.FloatField(
+        default=0.0, write_only=True
+    )
 
     class Meta:
         model = Product
@@ -63,6 +65,31 @@ class ProductCreateSerializer(serializers.ModelSerializer):
                 status=status
             )
         return product
+
+    def update(self, instance, validated_data):
+        amount = validated_data.pop("amount", 0)
+        serializers.raise_errors_on_nested_writes('update', self, validated_data)
+        info = serializers.model_meta.get_field_info(instance)
+
+        m2m_fields = []
+        for attr, value in validated_data.items():
+            if attr in info.relations and info.relations[attr].to_many:
+                m2m_fields.append((attr, value))
+            else:
+                setattr(instance, attr, value)
+
+        instance.save()
+        if amount != 0:
+            Payment.objects.create(
+                product=instance,
+                amount=amount
+            )
+
+        for attr, value in m2m_fields:
+            field = getattr(instance, attr)
+            field.set(value)
+
+        return instance
 
 
 class PaymentSerializer(serializers.ModelSerializer):

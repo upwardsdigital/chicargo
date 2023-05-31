@@ -4,7 +4,7 @@ from rest_framework import routers
 from .views import (
     StatusListCreateAPIView, ProductTypeListCreateAPIView,
     ProductModelViewSet, ProductHistoryListAPIView,
-    PackageTypeListCreateAPIView
+    PackageTypeListCreateAPIView, CalculateDebtAmountAPIView
 )
 
 router = routers.DefaultRouter()
@@ -15,5 +15,10 @@ urlpatterns = [
     path('products/types/', ProductTypeListCreateAPIView.as_view(), name="products_types"),
     path('products/history/', ProductHistoryListAPIView.as_view(), name="products_history"),
     path('products/package/types/', PackageTypeListCreateAPIView.as_view(), name="package_types"),
-    path('', include(router.urls))
+    path('', include(router.urls)),
+    path(
+        'products/calculate/payment/amount/',
+        CalculateDebtAmountAPIView.as_view(),
+        name="product_payment_amount_calculate"
+    )
 ]
