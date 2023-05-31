@@ -107,7 +107,9 @@ class ProductCreateSerializer(serializers.ModelSerializer):
                 setattr(instance, attr, value)
 
         instance.save()
-        if amount >= (instance.price + amount):
+        if (
+                amount + sum([payment.amount for payment in instance.payments.all()])
+        ) >= instance.price:
             payment_status, _ = PaymentStatus.objects.get_or_create(
                 slug="paid",
                 defaults={'name': 'Оплачено'}
@@ -117,7 +119,9 @@ class ProductCreateSerializer(serializers.ModelSerializer):
                 amount=amount
             )
             instance.payment_status = payment_status
-        elif amount != instance.price and amount != 0:
+        elif (
+                amount + sum([payment.amount for payment in instance.payments.all()])
+        ) != instance.price and amount != 0:
             payment_status, _ = PaymentStatus.objects.get_or_create(
                 slug="partially",
                 defaults={'name': 'Частично'}
