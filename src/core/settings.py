@@ -49,6 +49,7 @@ MIDDLEWARE = [
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
 
     'orders.middleware.SetPaymentStatusMiddleware',
+    'trucks.middleware.SetTruckPaymentStatusMiddleware',
 ]
 
 ROOT_URLCONF = 'core.urls'
