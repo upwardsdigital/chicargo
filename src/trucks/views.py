@@ -7,7 +7,7 @@ from accounts.pagination import CustomPageNumberPagination
 
 
 class TruckListCreateAPIView(generics.ListCreateAPIView):
-    permission_classes = (permissions.IsAuthenticated,)
+    # permission_classes = (permissions.IsAuthenticated,)
     pagination_class = CustomPageNumberPagination
     queryset = Truck.objects.all().order_by('-id')
     filterset_class = TruckFilter

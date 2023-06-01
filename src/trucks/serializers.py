@@ -141,6 +141,8 @@ class TruckSerializer(serializers.ModelSerializer):
             'id', 'full_name',
             'volume', 'products',
             'count_of_products',
-            'created_at', 'truck_payments',
+            'created_at',
+            'truck_payments',
             'payment_status',
+            'payment_amount',
         )
