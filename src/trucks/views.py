@@ -21,7 +21,7 @@ class TruckListCreateAPIView(generics.ListCreateAPIView):
 
 class TruckRetrieveUpdateAPIView(generics.RetrieveUpdateAPIView):
     queryset = Truck.objects.all().order_by('-id')
-    permission_classes = (permissions.IsAuthenticated,)
+    # permission_classes = (permissions.IsAuthenticated,)
 
     def get_serializer_class(self):
         if self.request.method == "GET":

@@ -51,7 +51,7 @@ class TruckCreateSerializer(serializers.ModelSerializer):
             instance.save()
 
             TruckPayment.objects.create(
-                instance=instance,
+                truck=instance,
                 amount=amount,
             )
         else:
