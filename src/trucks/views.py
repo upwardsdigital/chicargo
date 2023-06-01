@@ -19,6 +19,17 @@ class TruckListCreateAPIView(generics.ListCreateAPIView):
             return TruckSerializer
 
 
+class TruckRetrieveUpdateAPIView(generics.RetrieveUpdateAPIView):
+    queryset = Truck.objects.all().order_by('-id')
+    permission_classes = (permissions.IsAuthenticated,)
+
+    def get_serializer_class(self):
+        if self.request.method == "GET":
+            return TruckSerializer
+        else:
+            return TruckCreateSerializer
+
+
 class TruckPaymentRetrieveDestroyAPIView(generics.RetrieveDestroyAPIView):
     serializer_class = TruckPaymentSerializer
     queryset = TruckPayment.objects.all()

@@ -68,6 +68,57 @@ class TruckCreateSerializer(serializers.ModelSerializer):
             product.save()
         return instance
 
+    def update(self, instance, validated_data):
+        amount = validated_data.pop("amount", 0)
+        serializers.raise_errors_on_nested_writes('update', self, validated_data)
+        info = serializers.model_meta.get_field_info(instance)
+
+        m2m_fields = []
+        for attr, value in validated_data.items():
+            if attr in info.relations and info.relations[attr].to_many:
+                m2m_fields.append((attr, value))
+            else:
+                setattr(instance, attr, value)
+
+        instance.save()
+        if (
+                amount + sum([truck_payment.amount for truck_payment in instance.truck_payments.all()])
+        ) >= instance.payment_amount:
+            payment_status, _ = PaymentStatus.objects.get_or_create(
+                slug="paid",
+                defaults={'name': 'Оплачено'}
+            )
+            TruckPayment.objects.create(
+                truck=instance,
+                amount=amount,
+            )
+            instance.payment_status = payment_status
+        elif (
+                amount + sum([truck_payment.amount for truck_payment in instance.truck_payments.all()])
+        ) != instance.payment_amount and amount != 0:
+            payment_status, _ = PaymentStatus.objects.get_or_create(
+                slug="partially",
+                defaults={'name': 'Частично'}
+            )
+            TruckPayment.objects.create(
+                truck=instance,
+                amount=amount,
+            )
+            instance.payment_status = payment_status
+        else:
+            payment_status, _ = PaymentStatus.objects.get_or_create(
+                slug="not_paid",
+                defaults={'name': 'Не оплачено'}
+            )
+            instance.payment_status = payment_status
+        instance.save()
+
+        for attr, value in m2m_fields:
+            field = getattr(instance, attr)
+            field.set(value)
+
+        return instance
+
 
 class TruckPaymentSerializer(serializers.ModelSerializer):
 
