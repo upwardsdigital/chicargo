@@ -29,30 +29,30 @@ class PaymentRetrieveDestroyAPIView(generics.RetrieveDestroyAPIView):
     serializer_class = PaymentSerializer
     queryset = Payment.objects.all()
 
-    def destroy(self, request, *args, **kwargs):
-        instance = self.get_object()
-        product = get_object_or_404(Product, pk=instance.product.pk)
-        self.perform_destroy(instance)
-        transactions = product.payments.all()
-        if transactions.count() == 0:
-            payment_status, _ = PaymentStatus.objects.get_or_create(
-                slug="not_paid",
-                defaults={'name': 'Не оплачено'}
-            )
-            product.payment_status = payment_status
-        elif product.price <= sum([payment.amount for payment in transactions]):
-            payment_status, _ = PaymentStatus.objects.get_or_create(
-                slug="paid",
-                defaults={'name': 'Оплачено'}
-            )
-            product.payment_status = payment_status
-        else:
-            payment_status, _ = PaymentStatus.objects.get_or_create(
-                slug="partially",
-                defaults={'name': 'Оплачен частично'}
-            )
-            product.payment_status = payment_status
-        return response.Response(status=status.HTTP_204_NO_CONTENT)
+    # def destroy(self, request, *args, **kwargs):
+    #     instance = self.get_object()
+    #     product = get_object_or_404(Product, pk=instance.product.pk)
+    #     self.perform_destroy(instance)
+    #     transactions = product.payments.all()
+    #     if transactions.count() == 0:
+    #         payment_status, _ = PaymentStatus.objects.get_or_create(
+    #             slug="not_paid",
+    #             defaults={'name': 'Не оплачено'}
+    #         )
+    #         product.payment_status = payment_status
+    #     elif product.price <= sum([payment.amount for payment in transactions]):
+    #         payment_status, _ = PaymentStatus.objects.get_or_create(
+    #             slug="paid",
+    #             defaults={'name': 'Оплачено'}
+    #         )
+    #         product.payment_status = payment_status
+    #     else:
+    #         payment_status, _ = PaymentStatus.objects.get_or_create(
+    #             slug="partially",
+    #             defaults={'name': 'Оплачен частично'}
+    #         )
+    #         product.payment_status = payment_status
+    #     return response.Response(status=status.HTTP_204_NO_CONTENT)
 
 
 class PaymentStatusListCreateAPIView(generics.ListCreateAPIView):
