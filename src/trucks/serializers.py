@@ -145,4 +145,5 @@ class TruckSerializer(serializers.ModelSerializer):
             'truck_payments',
             'payment_status',
             'payment_amount',
+            'total_paid_amount',
         )

@@ -21,6 +21,11 @@ class Truck(models.Model):
     def count_of_products(self):
         return self.products.count()
 
+    def total_paid_amount(self):
+        return sum(
+            [payment.amount for payment in self.truck_payments.all()]
+        )
+
 
 class TruckPayment(models.Model):
     truck = models.ForeignKey(
