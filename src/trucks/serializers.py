@@ -24,15 +24,18 @@ class TruckCreateSerializer(serializers.ModelSerializer):
 
     def create(self, validated_data):
         amount = validated_data.pop('amount', 0)
+        instance = Truck.objects.create(
+            **validated_data,
+        )
         if amount >= validated_data.get("payment_amount", None):
             payment_status, _ = PaymentStatus.objects.get_or_create(
                 slug="paid",
                 defaults={'name': 'Оплачено'}
             )
-            instance = Truck.objects.create(
-                **validated_data,
-                payment_status=payment_status
-            )
+
+            instance.payment_status = payment_status
+            instance.save()
+
             TruckPayment.objects.create(
                 truck=instance,
                 amount=amount,
@@ -43,10 +46,10 @@ class TruckCreateSerializer(serializers.ModelSerializer):
                 slug="partially",
                 defaults={'name': 'Частично'}
             )
-            instance = Truck.objects.create(
-                **validated_data,
-                payment_status=payment_status
-            )
+
+            instance.payment_status = payment_status
+            instance.save()
+
             TruckPayment.objects.create(
                 instance=instance,
                 amount=amount,
@@ -56,10 +59,10 @@ class TruckCreateSerializer(serializers.ModelSerializer):
                 slug="not_paid",
                 defaults={'name': 'Не оплачено'}
             )
-            instance = Truck.objects.create(
-                **validated_data,
-                payment_status=payment_status
-            )
+
+            instance.payment_status = payment_status
+            instance.save()
+
         status, _ = Status.objects.get_or_create(slug="onTheWay", defaults={'name': "В Пути"})
         products = Product.objects.filter(status__slug="loading")
         for product in products:
