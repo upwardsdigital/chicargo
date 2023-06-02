@@ -1,9 +1,15 @@
 from rest_framework import generics, permissions, views, response, status
 from django.shortcuts import get_object_or_404
-from .serializers import TruckSerializer, TruckCreateSerializer, TruckPaymentSerializer
+from .serializers import (
+    TruckSerializer, TruckCreateSerializer,
+    TruckPaymentSerializer
+)
+from orders.serializers import ProductSerializer
 from .models import Truck, TruckPayment
 from .filters import TruckFilter
 from accounts.pagination import CustomPageNumberPagination
+
+from orders.models import Product
 
 
 class TruckListCreateAPIView(generics.ListCreateAPIView):
@@ -33,6 +39,16 @@ class TruckRetrieveUpdateAPIView(generics.RetrieveUpdateAPIView):
 class TruckPaymentRetrieveDestroyAPIView(generics.RetrieveDestroyAPIView):
     serializer_class = TruckPaymentSerializer
     queryset = TruckPayment.objects.all()
+
+
+class TruckProductListAPIView(generics.ListAPIView):
+    serializer_class = ProductSerializer
+    pagination_class = CustomPageNumberPagination
+
+    def get_queryset(self):
+        truck_id = self.kwargs['pk']
+        queryset = Product.objects.filter(truck_id=truck_id)
+        return queryset
 
 
 class CalculateTruckDebtAmountAPIView(views.APIView):

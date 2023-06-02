@@ -6,6 +6,7 @@ from orders.models import Product, Status
 from orders.models import PaymentStatus
 
 from orders.serializers import PaymentStatusSerializer
+from accounts.pagination import CustomPageNumberPagination
 
 
 class TruckCreateSerializer(serializers.ModelSerializer):
