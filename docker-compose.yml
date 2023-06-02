@@ -23,7 +23,7 @@ services:
     env_file: .env
     volumes:
       - .:/app
-      - static:/app/src/static
+      - staticfiles:/app/src/staticfiles
       - media:/app/src/media
     depends_on:
       - db
