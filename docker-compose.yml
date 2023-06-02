@@ -27,16 +27,16 @@ services:
       - media:/app/src/media
     depends_on:
       - db
-  nginx:
-    build: ./nginx
-    restart: on-failure
-    ports:
-      - 80:80
-    volumes:
-      - static:/app/src/static
-      - media:/app/src/media
-    depends_on:
-      - web
+#  nginx:
+#    build: ./nginx
+#    restart: on-failure
+#    ports:
+#      - "80:80"
+#    volumes:
+#      - static:/app/src/static
+#      - media:/app/src/media
+#    depends_on:
+#      - web
 
 volumes:
   pg_data:
