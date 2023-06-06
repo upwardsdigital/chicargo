@@ -43,9 +43,9 @@ class StaffUserListCreateAPIView(generics.ListCreateAPIView):
     def get_queryset(self):
         if self.request.user.is_superuser:
             return User.objects.all().exclude(is_superuser=True)
-        elif self.request.user.country == "KGZ":
+        elif self.request.user.country.code == "KGZ":
             return User.objects.filter(country__code="KGZ")
-        elif self.request.user.country == "KZ":
+        elif self.request.user.country.code == "KZ":
             return User.objects.filter(country__code="KZ")
         else:
             return User.objects.none()
