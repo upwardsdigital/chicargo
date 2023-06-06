@@ -33,13 +33,22 @@ class CountryListAPIView(generics.ListAPIView):
 
 class StaffUserListCreateAPIView(generics.ListCreateAPIView):
     pagination_class = CustomPageNumberPagination
-    queryset = User.objects.filter(is_staff=True, is_superuser=False)
 
     def get_serializer_class(self):
         if self.request.method == 'GET':
             return StaffUserSerializer
         elif self.request.method == 'POST':
             return CreateStaffUserSerializer
+
+    def get_queryset(self):
+        if self.request.user.is_superuser:
+            return User.objects.all().exclude(is_superuser=True)
+        elif self.request.user.country == "KGZ":
+            return User.objects.filter(country__code="KGZ")
+        elif self.request.user.country == "KZ":
+            return User.objects.filter(country__code="KZ")
+        else:
+            return User.objects.none()
 
 
 class StaffUserUpdateAPIView(generics.UpdateAPIView):
