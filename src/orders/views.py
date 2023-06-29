@@ -90,7 +90,7 @@ class CalculateDebtAmountAPIView(views.APIView):
 
 class ProductHistoryListAPIView(generics.ListAPIView):
     permission_classes = (permissions.IsAuthenticated, permissions.IsAdminUser,)
-    queryset = Product.objects.filter(status__slug="issued").order_by('-id')
+    queryset = Product.objects.filter(status__slug="issued", payment_status__slug="paid").order_by('-id')
     pagination_class = OrderPageNumberPagination
     filter_backends = (dj_filters.DjangoFilterBackend, filters.SearchFilter,)
     filterset_class = ProductFilter
