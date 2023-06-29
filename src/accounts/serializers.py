@@ -208,3 +208,8 @@ class ReportRetrieveSerializer(serializers.ModelSerializer):
     class Meta:
         model = Report
         fields = '__all__'
+
+    def to_representation(self, instance):
+        representation = super().to_representation(instance)
+        representation["country"] = instance.author.country
+        return representation
