@@ -211,5 +211,5 @@ class ReportRetrieveSerializer(serializers.ModelSerializer):
 
     def to_representation(self, instance):
         representation = super().to_representation(instance)
-        representation["country"] = instance.author.country
+        representation["country"] = instance.author.country.name
         return representation
