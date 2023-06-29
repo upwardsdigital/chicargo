@@ -53,9 +53,12 @@ class ProductModelViewSet(viewsets.ModelViewSet):
         )
 
     def get_queryset(self):
-        product_status, _ = Status.objects.get_or_create(slug="issued", defaults={"name": "Выдан"})
-        payment_status, _ = PaymentStatus.objects.get_or_create(slug="paid", defaults={"name": "Оплачено"})
-        return Product.objects.exclude(status=product_status, payment_status=payment_status).order_by('-id')
+        if self.action == "list":
+            return Product.objects.exclude(
+                status__slug="issued", payment_status__slug="paid"
+            ).order_by('-id')
+        else:
+            return Product.objects.all().order_by('-id')
 
     def get_serializer_class(self):
         if self.request.method == 'GET':
