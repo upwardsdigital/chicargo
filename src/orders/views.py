@@ -42,7 +42,6 @@ class PackageTypeListCreateAPIView(generics.ListCreateAPIView):
 
 class ProductModelViewSet(viewsets.ModelViewSet):
     permission_classes = (permissions.IsAuthenticated, permissions.IsAdminUser,)
-    queryset = Product.objects.all().order_by('-id')
     pagination_class = OrderPageNumberPagination
     filter_backends = (dj_filters.DjangoFilterBackend, filters.SearchFilter,)
     filterset_class = ProductFilter
@@ -52,6 +51,11 @@ class ProductModelViewSet(viewsets.ModelViewSet):
         serializer.save(
             author=self.request.user
         )
+
+    def get_queryset(self):
+        product_status, _ = Status.objects.get_or_create(slug="issued", defaults={"name": "Выдан"})
+        payment_status, _ = PaymentStatus.objects.get_or_create(slug="paid", defaults={"name": "Оплачено"})
+        return Product.objects.exclude(status=product_status, payment_status=payment_status).order_by('-id')
 
     def get_serializer_class(self):
         if self.request.method == 'GET':
