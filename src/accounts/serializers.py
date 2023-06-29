@@ -6,7 +6,6 @@ from rest_framework_simplejwt.serializers import TokenObtainPairSerializer
 from django.db import IntegrityError
 from rest_framework.utils import model_meta
 
-
 from .models import Country, Report
 from .services import EmailService
 
@@ -35,14 +34,12 @@ class CustomTokenObtainPairSerializer(TokenObtainPairSerializer):
 
 
 class GroupSerializer(serializers.ModelSerializer):
-
     class Meta:
         model = Group
         fields = ("id", "name",)
 
 
 class CountrySerializer(serializers.ModelSerializer):
-
     class Meta:
         model = Country
         fields = ("id", "name", "code",)
@@ -91,12 +88,13 @@ class CreateStaffUserSerializer(serializers.ModelSerializer):
     def create(self, validated_data):
         groups_id = validated_data.pop('group', 0)
         groups = Group.objects.filter(id__in=[groups_id])
-        password = validated_data.pop('password', 0)
-        confirm_password = validated_data.pop('confirm_password', 0)
+        password = validated_data.pop('password', None)
+        confirm_password = validated_data.pop('confirm_password', None)
         if password != confirm_password:
             raise serializers.ValidationError('Passwords mismatch')
         user = User.objects.create(is_staff=True, **validated_data)
-        user.set_password(password)
+        if password is not None:
+            user.set_password(password)
         user.groups.add(*groups)
         user.save()
         data = {
@@ -180,7 +178,6 @@ class UpdateStaffUserSerializer(serializers.ModelSerializer):
 
 
 class ReportSerializer(serializers.ModelSerializer):
-
     class Meta:
         model = Report
         fields = '__all__'
