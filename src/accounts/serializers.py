@@ -67,14 +67,16 @@ class CreateStaffUserSerializer(serializers.ModelSerializer):
         min_length=8,
         write_only=True,
         style={'input_type': 'password'},
-        label='password'
+        label='password',
+        required=False
     )
     confirm_password = serializers.CharField(
         max_length=128,
         min_length=8,
         write_only=True,
         style={'input_type': 'password'},
-        label='confirm password'
+        label='confirm password',
+        required=False
     )
     group = serializers.IntegerField(write_only=True)
 
@@ -89,8 +91,8 @@ class CreateStaffUserSerializer(serializers.ModelSerializer):
     def create(self, validated_data):
         groups_id = validated_data.pop('group', 0)
         groups = Group.objects.filter(id__in=[groups_id])
-        password = validated_data.pop('password')
-        confirm_password = validated_data.pop('confirm_password')
+        password = validated_data.pop('password', 0)
+        confirm_password = validated_data.pop('confirm_password', 0)
         if password != confirm_password:
             raise serializers.ValidationError('Passwords mismatch')
         user = User.objects.create(is_staff=True, **validated_data)
