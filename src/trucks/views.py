@@ -2,10 +2,10 @@ from rest_framework import generics, permissions, views, response, status
 from django.shortcuts import get_object_or_404
 from .serializers import (
     TruckSerializer, TruckCreateSerializer,
-    TruckPaymentSerializer
+    TruckPaymentSerializer, TruckStatusSerializer
 )
 from orders.serializers import ProductSerializer
-from .models import Truck, TruckPayment
+from .models import Truck, TruckPayment, TruckStatus
 from .filters import TruckFilter
 from accounts.pagination import CustomPageNumberPagination
 
@@ -73,3 +73,8 @@ class CalculateTruckDebtAmountAPIView(views.APIView):
                 },
                 status=status.HTTP_400_BAD_REQUEST
             )
+
+
+class TruckStatusListAPIView(generics.ListAPIView):
+    serializer_class = TruckStatusSerializer
+    queryset = TruckStatus.objects.all()
