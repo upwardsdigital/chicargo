@@ -25,7 +25,7 @@ class TruckCreateSerializer(serializers.ModelSerializer):
 
     def create(self, validated_data):
         amount = validated_data.pop('amount', 0)
-        truck_status = TruckStatus.objects.get_or_create(
+        truck_status, _ = TruckStatus.objects.get_or_create(
             slug="onTheWay",
             defaults={"name": "В пути"}
         )
