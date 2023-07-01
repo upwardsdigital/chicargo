@@ -25,7 +25,12 @@ class TruckCreateSerializer(serializers.ModelSerializer):
 
     def create(self, validated_data):
         amount = validated_data.pop('amount', 0)
+        truck_status = TruckStatus.objects.get_or_create(
+            slug="onTheWay",
+            defaults={"name": "В пути"}
+        )
         instance = Truck.objects.create(
+            truck_status=truck_status,
             **validated_data,
         )
         if amount >= validated_data.get("payment_amount", None):
