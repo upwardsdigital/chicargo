@@ -3,6 +3,14 @@ from django.db import models
 from orders.models import PaymentStatus
 
 
+class TruckStatus(models.Model):
+    name = models.CharField(max_length=255)
+    slug = models.CharField(max_length=255, unique=True)
+
+    def __str__(self):
+        return self.name
+
+
 class Truck(models.Model):
     full_name = models.CharField(max_length=255)
     volume = models.FloatField(default=0.0)
@@ -10,6 +18,12 @@ class Truck(models.Model):
     created_at = models.DateTimeField(auto_now_add=True)
     payment_status = models.ForeignKey(
         PaymentStatus,
+        on_delete=models.CASCADE,
+        related_name="trucks",
+        blank=True, null=True
+    )
+    status = models.ForeignKey(
+        TruckStatus,
         on_delete=models.CASCADE,
         related_name="trucks",
         blank=True, null=True
