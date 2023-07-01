@@ -20,7 +20,7 @@ class TruckCreateSerializer(serializers.ModelSerializer):
             'id', 'full_name',
             'volume', 'payment_amount',
             'created_at', 'payment_status',
-            'amount'
+            'amount', 'status'
         )
 
     def create(self, validated_data):
