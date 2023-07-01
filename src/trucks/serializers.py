@@ -30,7 +30,7 @@ class TruckCreateSerializer(serializers.ModelSerializer):
             defaults={"name": "В пути"}
         )
         instance = Truck.objects.create(
-            truck_status=truck_status,
+            status=truck_status,
             **validated_data,
         )
         if amount >= validated_data.get("payment_amount", None):
