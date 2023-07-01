@@ -147,7 +147,7 @@ class TruckSerializer(serializers.ModelSerializer):
     products = ProductSerializer(many=True)
     payment_status = PaymentStatusSerializer(many=False)
     truck_payments = TruckPaymentSerializer(many=True)
-    truck_status = TruckStatusSerializer(many=False)
+    status = TruckStatusSerializer(many=False)
 
     class Meta:
         model = Truck
@@ -157,7 +157,7 @@ class TruckSerializer(serializers.ModelSerializer):
             'count_of_products',
             'created_at',
             'truck_payments',
-            'truck_status',
+            'status',
             'payment_status',
             'payment_amount',
             'total_paid_amount',
