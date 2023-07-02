@@ -22,7 +22,7 @@ class StatusListCreateAPIView(generics.ListCreateAPIView):
 
 class ProductTypeListCreateAPIView(generics.ListCreateAPIView):
     serializer_class = ProductTypeSerializer
-    queryset = ProductType.objects.all()
+    queryset = ProductType.objects.all().order_by('position')
 
 
 class PaymentRetrieveDestroyAPIView(generics.RetrieveDestroyAPIView):
