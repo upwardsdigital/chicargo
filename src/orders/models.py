@@ -50,9 +50,9 @@ class Product(models.Model):
         blank=True, null=True
     )
     sender_full_name = models.CharField(max_length=255)
-    sender_phone = models.CharField(max_length=255)
-    receiver_full_name = models.CharField(max_length=255)
-    receiver_phone = models.CharField(max_length=255)
+    sender_phone = models.CharField(max_length=255, blank=True, null=True)
+    receiver_full_name = models.CharField(max_length=255, blank=True, null=True)
+    receiver_phone = models.CharField(max_length=255, blank=True, null=True)
     city = models.CharField(max_length=255)
     type = models.ForeignKey(
         ProductType,
@@ -64,7 +64,7 @@ class Product(models.Model):
         related_name="products",
         blank=True, null=True
     )
-    address = models.CharField(max_length=255)
+    address = models.CharField(max_length=255, blank=True, null=True)
     price = models.FloatField()
     status = models.ForeignKey(
         Status,
