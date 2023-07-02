@@ -12,7 +12,7 @@ services:
     build:
       context: .
     command: >
-      sh -c "python src/manage.py makemigrations &&
+      sh -c "python manage.py makemigrations --merge --no-input &&
              python src/manage.py migrate &&
              python src/manage.py collectstatic --no-input &&
              cd src/ &&
